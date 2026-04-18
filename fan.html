@@ -35,10 +35,18 @@
         <button
           class="theme-toggle"
           data-theme-toggle
+          type="button"
+          role="switch"
           aria-label="Switch to dark mode"
-          aria-pressed="false"
+          aria-checked="false"
           title="Toggle dark mode"
-        >🌙</button>
+        >
+          <span class="theme-toggle__text">Light</span>
+          <span class="theme-toggle__track" aria-hidden="true">
+            <span class="theme-toggle__thumb"></span>
+          </span>
+          <span class="theme-toggle__text">Dark</span>
+        </button>
         <a class="header-action" href="./index.html">Ops Dashboard</a>
       </div>
     </header>
