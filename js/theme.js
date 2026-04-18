@@ -42,8 +42,9 @@ export function setTheme(theme) {
   if (btn) {
     const isDark = theme === DARK;
     btn.setAttribute('aria-pressed', String(isDark));
+    btn.setAttribute('aria-checked', String(isDark));
     btn.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
-    btn.textContent = isDark ? '☀' : '🌙';
+    btn.setAttribute('title', isDark ? 'Switch to light mode' : 'Switch to dark mode');
   }
 }
 

@@ -1061,22 +1061,60 @@ h3 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  gap: 8px;
   border: 1px solid currentColor;
-  border-radius: 8px;
+  border-radius: 999px;
   background: transparent;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
   color: inherit;
-  transition: background 140ms ease;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease;
+  padding: 0 10px;
+  height: 42px;
   min-height: 42px;
-  min-width: 42px;
+  min-width: 122px;
 }
 
 .theme-toggle:hover,
 .theme-toggle:focus-visible {
   background: rgba(255, 255, 255, 0.15);
+}
+
+.theme-toggle__text {
+  line-height: 1;
+}
+
+.theme-toggle__track {
+  position: relative;
+  width: 38px;
+  height: 20px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+  transition: background 140ms ease;
+}
+
+.theme-toggle__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: currentColor;
+  transition: transform 140ms ease;
+}
+
+.theme-toggle[aria-checked="true"] .theme-toggle__thumb {
+  transform: translateX(18px);
+}
+
+[data-theme="dark"] .theme-toggle__track {
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .theme-toggle:focus-visible {
@@ -1325,6 +1363,15 @@ h3 {
 @media (max-width: 760px) {
   .header-controls {
     gap: 6px;
+  }
+
+  .theme-toggle {
+    min-width: auto;
+    padding: 0 8px;
+  }
+
+  .theme-toggle__text {
+    display: none;
   }
 
   .fan-map-iframe {

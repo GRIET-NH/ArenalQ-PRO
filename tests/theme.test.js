@@ -62,11 +62,13 @@ describe('theme', () => {
 
     setTheme('dark');
     expect(btn.getAttribute('aria-pressed')).toBe('true');
-    expect(btn.textContent).toBe('☀');
+    expect(btn.getAttribute('aria-checked')).toBe('true');
+    expect(btn.getAttribute('aria-label')).toBe('Switch to light mode');
 
     setTheme('light');
     expect(btn.getAttribute('aria-pressed')).toBe('false');
-    expect(btn.textContent).toBe('🌙');
+    expect(btn.getAttribute('aria-checked')).toBe('false');
+    expect(btn.getAttribute('aria-label')).toBe('Switch to dark mode');
   });
 
   it('does not throw when no toggle button is in the DOM', () => {
