@@ -1,12 +1,16 @@
 /**
  * @module simulated-venue-map
- * @description SVG-based venue map rendered in simulation mode when no
- * Google Maps API key is configured.
+ * @description Venue map rendered in simulation / no-key mode.
  *
- * Draws a top-down schematic of the eight venue zones and colours each zone
- * in real time to reflect the crowd density level emitted by a `CrowdMonitor`
- * instance.  Mirrors the public interface of `VenueMap` so `main.js` can swap
- * between the two implementations without conditional logic inside callers.
+ * Renders two panels inside the container:
+ *  1. A real Google Maps iframe (Embed API — no JS SDK key required) centred
+ *     on the venue coordinates, giving ops staff and fans a genuine location
+ *     reference without any billable API call.
+ *  2. A top-down SVG schematic of the eight venue zones coloured in real time
+ *     to reflect the crowd density level emitted by a `CrowdMonitor` instance.
+ *
+ * Mirrors the public interface of `VenueMap` so `main.js` can swap between the
+ * two implementations without conditional logic inside callers.
  */
 
 /** Maps a DensityLevel to a stroke/border colour for zone shapes. */
@@ -60,16 +64,18 @@ const INITIAL_FILL = '#f0f2f0';
 export class SimulatedVenueMap {
   /**
    * @param {object}      options
-   * @param {HTMLElement} options.container    - DOM element that will host the SVG
+   * @param {HTMLElement} options.container    - DOM element that will host the map
    * @param {object}      [options.crowdMonitor] - CrowdMonitor instance for overlays
+   * @param {{lat: number, lng: number}} [options.center] - Venue centre coordinate
    * @throws {TypeError} if container is not an HTMLElement
    */
-  constructor({ container, crowdMonitor = null }) {
+  constructor({ container, crowdMonitor = null, center = { lat: 40.7484, lng: -73.9967 } }) {
     if (!(container instanceof HTMLElement)) {
       throw new TypeError('SimulatedVenueMap: container must be an HTMLElement');
     }
     this._container = container;
     this._crowdMonitor = crowdMonitor;
+    this._center = center;
     /** @type {Map<string, SVGRectElement>} */
     this._rects = new Map();
     /** @type {Map<string, SVGTextElement>} */
@@ -94,6 +100,26 @@ export class SimulatedVenueMap {
 
   /** @private */
   _render() {
+    // ── Outer wrapper ──────────────────────────────────────────────────────────
+    const wrapper = document.createElement('div');
+    wrapper.className = 'simmap-wrapper';
+
+    // ── Google Maps iframe (Embed API — no key required) ───────────────────────
+    const { lat, lng } = this._center;
+    const mapSrc =
+      `https://maps.google.com/maps?q=${encodeURIComponent(lat)},${encodeURIComponent(lng)}&z=16&output=embed`;
+
+    const iframe = document.createElement('iframe');
+    iframe.className = 'simmap-iframe';
+    iframe.src = mapSrc;
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.setAttribute('loading', 'lazy');
+    iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+    iframe.setAttribute('title', 'Venue location on Google Maps');
+    iframe.setAttribute('aria-label', 'Google Maps showing venue location');
+    wrapper.appendChild(iframe);
+
+    // ── SVG density schematic ──────────────────────────────────────────────────
     const svg = document.createElementNS(SVG_NS, 'svg');
     svg.setAttribute('viewBox', '0 0 480 360');
     svg.setAttribute('width', '100%');
@@ -153,8 +179,19 @@ export class SimulatedVenueMap {
     badge.setAttribute('font-style', 'italic');
     svg.appendChild(badge);
 
+    // SVG container panel with label ──────────────────────────────────────────
+    const svgPanel = document.createElement('div');
+    svgPanel.className = 'simmap-density-panel';
+
+    const svgLabel = document.createElement('p');
+    svgLabel.className = 'simmap-density-label';
+    svgLabel.textContent = 'Live Crowd Density Overlay';
+    svgPanel.appendChild(svgLabel);
+    svgPanel.appendChild(svg);
+    wrapper.appendChild(svgPanel);
+
     this._container.innerHTML = '';
-    this._container.appendChild(svg);
+    this._container.appendChild(wrapper);
   }
 
   /**

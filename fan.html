@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ArenaIQ Fan Companion</title>
+    <meta
+      name="description"
+      content="Live venue wait times, zone status, and step-by-step wayfinding for ArenaIQ events."
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' https://maps.googleapis.com https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' https://images.unsplash.com data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com; frame-src https://maps.google.com https://www.google.com;"
+    />
+    <meta property="og:title" content="ArenaIQ Fan Companion" />
+    <meta property="og:description" content="Live wait times, wayfinding, and zone status for ArenaIQ events." />
+    <meta property="og:type" content="website" />
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" data-skip-link href="#fan-main">Skip to main content</a>
+
+    <header class="site-header" aria-label="Fan Companion navigation">
+      <a class="brand" href="./index.html" aria-label="ArenaIQ — back to main site">
+        <span class="brand-mark" aria-hidden="true"></span>
+        ArenaIQ
+      </a>
+      <nav class="nav-links" aria-label="Fan Companion sections">
+        <a href="#fan-wayfinding">Wayfinding</a>
+        <a href="#fan-zones">Zone Status</a>
+        <a href="#fan-amenities">Amenities</a>
+      </nav>
+      <div class="header-controls">
+        <button
+          class="theme-toggle"
+          data-theme-toggle
+          aria-label="Switch to dark mode"
+          aria-pressed="false"
+          title="Toggle dark mode"
+        >🌙</button>
+        <a class="header-action" href="./index.html">Ops Dashboard</a>
+      </div>
+    </header>
+
+    <main id="fan-main">
+
+      <!-- ── Hero ──────────────────────────────────────────────────────── -->
+      <section class="fan-hero" aria-labelledby="fan-hero-title">
+        <div class="fan-hero__content">
+          <p class="eyebrow">Your event guide</p>
+          <h1 id="fan-hero-title">Know before you go.</h1>
+          <p class="fan-hero__sub">
+            Live wait times, crowd levels, and turn-by-turn venue wayfinding —
+            all updated every few seconds.
+          </p>
+        </div>
+      </section>
+
+      <!-- ── Wayfinding ─────────────────────────────────────────────────── -->
+      <section id="fan-wayfinding" class="fan-section" aria-labelledby="wayfinding-title">
+        <div class="section-heading">
+          <p class="eyebrow">Get directions</p>
+          <h2 id="wayfinding-title">Find your seat or gate.</h2>
+        </div>
+
+        <form id="wayfinding-form" class="wayfinding-form" novalidate>
+          <label for="seat-input" class="wayfinding-form__label">
+            Enter your seat section or gate
+          </label>
+          <div class="wayfinding-form__row">
+            <input
+              id="seat-input"
+              class="wayfinding-form__input"
+              type="text"
+              name="seat"
+              placeholder="e.g. Section 112, North Gate, Concessions Stand 3"
+              autocomplete="off"
+              aria-describedby="wayfinding-status"
+            />
+            <button type="submit" class="button primary wayfinding-form__btn">
+              Get Directions
+            </button>
+          </div>
+          <p id="wayfinding-status" class="wayfinding-form__status" aria-live="polite" aria-atomic="true"></p>
+        </form>
+
+        <div class="fan-map-wrap" aria-label="Venue map and wayfinding">
+          <h3 class="dashboard-label sr-only">Venue Map</h3>
+          <iframe
+            id="fan-map-frame"
+            class="fan-map-iframe"
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Venue location and directions on Google Maps"
+            aria-label="Google Maps showing venue location and walking directions"
+          ></iframe>
+          <p class="fan-map-hint">
+            <a
+              class="fan-map-link"
+              href="https://maps.google.com/?q=40.7484,-73.9967"
+              target="_blank"
+              rel="noopener noreferrer"
+            >Open full map in Google Maps ↗</a>
+          </p>
+        </div>
+      </section>
+
+      <!-- ── Zone Status ────────────────────────────────────────────────── -->
+      <section id="fan-zones" class="fan-section fan-section--alt" aria-labelledby="zones-title">
+        <div class="section-heading">
+          <p class="eyebrow">All areas</p>
+          <h2 id="zones-title">Current zone status.</h2>
+        </div>
+        <p class="demo-intro">Data updates every 2 seconds (simulation mode).</p>
+
+        <div
+          id="fan-zones-grid"
+          class="fan-zone-grid"
+          role="list"
+          aria-label="Venue zone crowd levels"
+          aria-live="polite"
+          aria-relevant="additions text"
+        ></div>
+      </section>
+
+      <!-- ── Amenities ──────────────────────────────────────────────────── -->
+      <section id="fan-amenities" class="fan-section" aria-labelledby="amenities-title">
+        <div class="section-heading">
+          <p class="eyebrow">Nearby services</p>
+          <h2 id="amenities-title">Gates, concessions & restrooms.</h2>
+        </div>
+
+        <div
+          id="fan-amenities-grid"
+          class="fan-zone-grid"
+          role="list"
+          aria-label="Venue amenities and gates"
+          aria-live="polite"
+          aria-relevant="additions text"
+        ></div>
+      </section>
+
+      <!-- ── Footer CTA ──────────────────────────────────────────────────── -->
+      <section class="cta" aria-labelledby="fan-cta-title">
+        <div>
+          <p class="eyebrow">Operations view</p>
+          <h2 id="fan-cta-title">Need the full command dashboard?</h2>
+        </div>
+        <a class="button primary" href="./index.html">Open Ops Dashboard</a>
+      </section>
+
+    </main>
+
+    <script src="./script.js"></script>
+    <script type="module" src="./js/fan.js"></script>
+  </body>
+</html>

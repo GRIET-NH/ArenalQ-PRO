@@ -13,10 +13,12 @@ import { Dashboard } from './dashboard.js';
 import { VenueMap } from './venue-map.js';
 import { SimulatedVenueMap } from './simulated-venue-map.js';
 import { initSkipLink, applyContrastPreferences } from './accessibility.js';
+import { initThemeToggle } from './theme.js';
 
 // ─── Accessibility ────────────────────────────────────────────────────────────
 initSkipLink('main-content');
 applyContrastPreferences();
+initThemeToggle();
 
 // ─── Services ────────────────────────────────────────────────────────────────
 const crowdMonitor = new CrowdMonitor({
@@ -48,10 +50,21 @@ if (mapEl && CONFIG.features.enableVenueMap) {
   });
   venueMap.init().catch((err) => {
     console.error('[ArenaIQ] Venue map initialisation failed:', err);
+    // Graceful fallback: show Google Maps Embed + density schematic
+    const simMap = new SimulatedVenueMap({
+      container: mapEl,
+      crowdMonitor,
+      center: CONFIG.googleMaps.venueCenter,
+    });
+    simMap.init();
   });
 } else if (mapEl) {
-  // No Google Maps API key configured — render the SVG simulation map instead.
-  const simMap = new SimulatedVenueMap({ container: mapEl, crowdMonitor });
+  // No Google Maps JS API key — render Google Maps Embed + SVG density map.
+  const simMap = new SimulatedVenueMap({
+    container: mapEl,
+    crowdMonitor,
+    center: CONFIG.googleMaps.venueCenter,
+  });
   simMap.init();
 }
 

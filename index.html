@@ -11,12 +11,13 @@
     <!-- Content Security Policy: disallow inline scripts / eval; allow only same-origin and trusted CDNs -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' https://maps.googleapis.com https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' https://images.unsplash.com data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com; frame-src 'none';"
+      content="default-src 'self'; script-src 'self' https://maps.googleapis.com https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' https://images.unsplash.com data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com; frame-src https://maps.google.com https://www.google.com;"
     />
     <meta property="og:title" content="ArenaIQ Smart Venue Platform" />
     <meta property="og:description" content="AI-powered crowd flow, real-time wayfinding, and ops command for large sporting venues." />
     <meta property="og:type" content="website" />
     <link rel="preconnect" href="https://images.unsplash.com" />
+    <link rel="manifest" href="./manifest.json" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -34,8 +35,18 @@
         <a href="#demo">Live Demo</a>
         <a href="#core">Core</a>
         <a href="#roadmap">Roadmap</a>
+        <a href="./fan.html">Fan View</a>
       </nav>
-      <a class="header-action" href="#roadmap">Build Plan</a>
+      <div class="header-controls">
+        <button
+          class="theme-toggle"
+          data-theme-toggle
+          aria-label="Switch to dark mode"
+          aria-pressed="false"
+          title="Toggle dark mode"
+        >🌙</button>
+        <a class="header-action" href="#roadmap">Build Plan</a>
+      </div>
     </header>
 
     <main id="main-content">
@@ -623,6 +634,19 @@
 
     <!-- Legacy sticky-header script (non-module, fast first paint) -->
     <script src="./script.js"></script>
+    <!--
+      Service Worker registration — enables offline support and PWA installability.
+      Only registered over HTTPS or localhost.
+    -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch((err) => {
+            console.warn('[ArenaIQ] Service worker registration failed:', err);
+          });
+        });
+      }
+    </script>
     <!--
       ArenaIQ application entry point.
       Loaded as an ES module — initialises CrowdMonitor, NotificationService,
