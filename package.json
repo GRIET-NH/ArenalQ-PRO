@@ -1,0 +1,28 @@
+{
+  "name": "arenaiq-smart-venue",
+  "version": "1.0.0",
+  "description": "AI-powered Smart Venue Experience Platform for large sporting events",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint js/ tests/ --ext .js",
+    "lint:fix": "eslint js/ tests/ --ext .js --fix"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "babel-jest": "^29.7.0",
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  },
+  "keywords": [
+    "smart-venue",
+    "crowd-management",
+    "google-maps",
+    "firebase",
+    "real-time"
+  ],
+  "license": "MIT"
+}
