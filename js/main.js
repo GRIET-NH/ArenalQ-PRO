@@ -11,6 +11,7 @@ import { CrowdMonitor } from './crowd-monitor.js';
 import { NotificationService } from './notifications.js';
 import { Dashboard } from './dashboard.js';
 import { VenueMap } from './venue-map.js';
+import { SimulatedVenueMap } from './simulated-venue-map.js';
 import { initSkipLink, applyContrastPreferences } from './accessibility.js';
 
 // ─── Accessibility ────────────────────────────────────────────────────────────
@@ -48,6 +49,10 @@ if (mapEl && CONFIG.features.enableVenueMap) {
   venueMap.init().catch((err) => {
     console.error('[ArenaIQ] Venue map initialisation failed:', err);
   });
+} else if (mapEl) {
+  // No Google Maps API key configured — render the SVG simulation map instead.
+  const simMap = new SimulatedVenueMap({ container: mapEl, crowdMonitor });
+  simMap.init();
 }
 
 // ─── Start live monitoring ────────────────────────────────────────────────────
