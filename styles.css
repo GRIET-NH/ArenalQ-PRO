@@ -963,16 +963,26 @@ h3 {
 }
 
 /* ── OS-level accessibility preferences ────────────────────────────────────── */
-@media (prefers-reduced-motion: reduce),
-html.reduce-motion * {
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Class applied by applyContrastPreferences() for programmatic control.
+   Uses :where() to keep specificity at (0,0,0), matching the * selector
+   inside the media query and avoiding cascade conflicts. */
+:where(html.reduce-motion) * {
   animation-duration: 0.01ms !important;
   animation-iteration-count: 1 !important;
   transition-duration: 0.01ms !important;
   scroll-behavior: auto !important;
 }
 
-@media (prefers-contrast: more),
-html.high-contrast {
+@media (prefers-contrast: more) {
   :root {
     --ink: #000000;
     --muted: #3a3a3a;
@@ -985,4 +995,11 @@ html.high-contrast {
   .tech-card {
     border-width: 2px;
   }
+}
+
+:where(html.high-contrast) {
+  --ink: #000000;
+  --muted: #3a3a3a;
+  --paper: #ffffff;
+  --line: #767676;
 }
