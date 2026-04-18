@@ -6,27 +6,39 @@
     <title>ArenaIQ Smart Venue Platform</title>
     <meta
       name="description"
-      content="ArenaIQ connects entry, crowd flow, mobile fan journeys, concessions, operations, parking, and transit into one smart venue platform."
+      content="ArenaIQ connects entry, crowd flow, mobile fan journeys, concessions, operations, parking, and transit into one AI-powered smart venue platform."
     />
+    <!-- Content Security Policy: disallow inline scripts / eval; allow only same-origin and trusted CDNs -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' https://maps.googleapis.com https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' https://images.unsplash.com data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com; frame-src 'none';"
+    />
+    <meta property="og:title" content="ArenaIQ Smart Venue Platform" />
+    <meta property="og:description" content="AI-powered crowd flow, real-time wayfinding, and ops command for large sporting venues." />
+    <meta property="og:type" content="website" />
     <link rel="preconnect" href="https://images.unsplash.com" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
+    <!-- Skip navigation: visible on keyboard focus for screen-reader & keyboard users -->
+    <a class="skip-link" data-skip-link href="#main-content">Skip to main content</a>
+
     <header class="site-header" aria-label="Primary navigation">
-      <a class="brand" href="#top" aria-label="ArenaIQ home">
-        <span class="brand-mark"></span>
+      <a class="brand" href="#main-content" aria-label="ArenaIQ home">
+        <span class="brand-mark" aria-hidden="true"></span>
         ArenaIQ
       </a>
       <nav class="nav-links" aria-label="Page sections">
         <a href="#systems">Systems</a>
         <a href="#journey">Journey</a>
+        <a href="#demo">Live Demo</a>
         <a href="#core">Core</a>
         <a href="#roadmap">Roadmap</a>
       </nav>
       <a class="header-action" href="#roadmap">Build Plan</a>
     </header>
 
-    <main id="top">
+    <main id="main-content">
       <section class="hero" aria-labelledby="hero-title">
         <img
           class="hero-image"
@@ -50,16 +62,16 @@
 
       <section class="metrics-band" aria-label="ArenaIQ platform outcomes">
         <div>
-          <strong>6</strong>
-          <span>connected systems</span>
+          <strong>25%</strong>
+          <span>avg queue time reduction</span>
         </div>
         <div>
-          <strong>Live</strong>
-          <span>venue demand signals</span>
+          <strong>&lt;60 s</strong>
+          <span>congestion detection-to-alert</span>
         </div>
         <div>
-          <strong>End-to-end</strong>
-          <span>fan journey coverage</span>
+          <strong>99.9%</strong>
+          <span>platform availability target</span>
         </div>
       </section>
 
@@ -209,6 +221,65 @@
             <span>06</span>
             <strong>Depart</strong>
             <p>Exit waves, shuttles, and lot routing reduce post-event gridlock.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Live Operations Demo ──────────────────────────────────────────── -->
+      <section id="demo" class="section demo" aria-labelledby="demo-title">
+        <div class="section-heading">
+          <p class="eyebrow">Live operations demo</p>
+          <h2 id="demo-title">The venue brain in motion.</h2>
+        </div>
+        <p class="demo-intro">
+          Running in simulation mode — data updates every 3 seconds.
+          Connect Firebase Firestore to switch to live venue feeds.
+        </p>
+
+        <div id="live-dashboard" class="live-dashboard" aria-label="Live venue operations dashboard">
+          <!-- Zone density grid — populated dynamically by dashboard.js -->
+          <div class="dashboard-panel">
+            <h3 class="dashboard-label" id="zone-grid-heading">Zone Density</h3>
+            <div
+              class="zone-grid"
+              role="list"
+              aria-labelledby="zone-grid-heading"
+              aria-live="polite"
+              aria-relevant="additions text"
+            ></div>
+          </div>
+
+          <!-- Alert feed — populated dynamically by dashboard.js -->
+          <div class="dashboard-panel">
+            <h3 class="dashboard-label" id="alert-feed-heading">Active Alerts</h3>
+            <ul
+              class="alert-feed"
+              role="list"
+              aria-labelledby="alert-feed-heading"
+              aria-live="assertive"
+              aria-label="Active venue alerts"
+            ></ul>
+            <p class="alert-feed-empty" aria-live="polite">Monitoring for alerts…</p>
+          </div>
+        </div>
+
+        <!-- Google Maps venue map container -->
+        <div class="venue-map-section">
+          <h3 class="dashboard-label">Venue Map</h3>
+          <div
+            id="venue-map"
+            class="venue-map"
+            role="img"
+            aria-label="Live venue crowd density map overlay — requires Google Maps API key"
+          >
+            <div class="venue-map-placeholder" aria-hidden="true">
+              <p>
+                <strong>Google Maps · Venue Wayfinding</strong><br />
+                Configure your Google Maps API key in
+                <code>window.__ARENAIQ_CONFIG__.mapsApiKey</code> to activate
+                the live crowd density heatmap and gate routing overlay.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -550,6 +621,14 @@
       </section>
     </main>
 
+    <!-- Legacy sticky-header script (non-module, fast first paint) -->
     <script src="./script.js"></script>
+    <!--
+      ArenaIQ application entry point.
+      Loaded as an ES module — initialises CrowdMonitor, NotificationService,
+      Dashboard, and the optional Google Maps venue map.
+      Pass runtime config via window.__ARENAIQ_CONFIG__ before this loads.
+    -->
+    <script type="module" src="./js/main.js"></script>
   </body>
 </html>
